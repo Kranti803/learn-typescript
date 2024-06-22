@@ -125,7 +125,7 @@
 //   name: string;
 //   price: number;
 //   stock: number;
-// }): Object => {
+// }): object => {
 //   return product;
 // };
 // interface productType {
@@ -134,8 +134,8 @@
 //   stock: number;
 //   readonly id: number; //we cannot change id now
 // }
-// // const getData = (product: productType):Object => { // this is incorrect function
-// //   return product.name; // typescript allows it as it doesnot check for type safetyas return type is Object
+// // const getData = (product: productType):object => { // this is incorrect function
+// //   return product.name; // typescript allows it as it doesnot check for type safetyas return type is object
 // // };
 // const getData = (product: productType): productType => {
 //   // this is correct function
@@ -246,3 +246,188 @@
 //   const number = Number(data) + 20;
 //   answer.innerText = `The sum after adding 20 is ${number.toString()}`;
 // });
+// interface Person {
+//   [key: string]: string;
+// }
+// const myObj: Person = {
+//   name: "user",
+//   email: "user@gmail.com",
+// };
+// const getData = (key: string): string => {
+//   return myObj[key];
+// };
+// console.log(getData("email"));
+//<------------------------------UTILITY TYPE IN TYPESCRIPT---------------------------------------->
+// ****Partial<Type>.....
+//=> used to make the values optional
+// type User = {
+//   name: string;
+//   email: string;
+// };
+// type user2 = Partial<User> //hover over user2 to see the type of user2
+// ****Required<Type>....
+//=> opposite of partial
+// type User = {
+//   name: string;
+//   email?: string;
+// };
+// type User2 = Required<User> //hover over user2 to see the type of user2
+// ****Readonly<Type>...
+//=> used to change the property into readonly(cannot be changed later)
+// type User= {
+//     name: string;
+//     email?: string;
+//   };
+//   type User2 = Readonly<User> //hover over user2 to see the type of user2
+// ****Record<Keys, Type>...
+// type User = {
+//   name: string;
+//   email: string;
+// };
+// type User2 = Record<"name" | "email" | "gender", string>;
+//example (can be used to combine different types)
+// interface UserInfo {
+//   age: number;
+// }
+// type UserName = "john" | "levi" | "elon" | "jack";
+// const users: Record<UserName, UserInfo> = {
+//   john: { age: 34 },
+//   levi: { age: 34 },
+//   elon: { age: 34 },
+//   jack: { age: 34 },
+// };
+// ***Pick<Type, Keys>....
+// interface OrderInfo {
+//   readonly id: string;
+//   user: string;
+//   city: string;
+//   state: string;
+//   country: string;
+//   status: string;
+// }
+// type ShippingInfo = Pick<OrderInfo, "city" | "state" | "country">; //hover over to see the new type
+// ****Omit<Type, Keys>....
+//=> opposite of Pick<Type,key >
+// interface OrderInfo {
+//   city: string;
+//   state: string;
+//   country: string;
+// }
+// type Random = Omit<OrderInfo, "city">;
+// ****Exclude<Type, ExcludedUnion>....
+// type myUnion = number | string | boolean;
+// type Random = Exclude<myUnion, number>;
+// ****Extract<Type, Union>....
+// type myUnion = number | string | boolean;
+// type Random = Extract<myUnion, number>;
+// *****NonNullable<Type>.....
+// type myUnion = number | string | boolean |null | undefined;
+// type Random = NonNullable<myUnion>;
+// ****Parameters<Type>......
+// const func = (a: string, b: string): void => {
+//   console.log(a + b);
+// };
+// type Random = Parameters<typeof func>;
+// *****ConstructorParameters<Type>....
+// class Sample {
+//   constructor(public s: string, public t: string) {}
+// }
+// type Random = ConstructorParameters< typeof Sample>
+// *****ReturnType<Type>....
+// const func = (a: string, b: string)=> {
+//   console.log(a + b);
+// };
+// type funcType = ReturnType<typeof func>
+// ****InstanceType<Type>....
+// class Sample {
+//     constructor(public s: string, public t: string) {}
+//   }
+//   type Random = InstanceType< typeof Sample>
+//<------------------------------ GENERICS IN TYPESCRIPT---------------------------------------->
+//Generics allow creating 'type variables' which can be used to create classes, functions & type aliases that don't need to explicitly define the types that they use.
+//Generics makes it easier to write reusable code.
+// const func = <T>(n: T): T => { // <T> means custom types
+//   return n;
+// };
+// const ans = func(5);
+// const ans2 = func('hello');
+// const ans3 = func(true);
+//another example.....
+// type Person = {
+//   name: string;
+//   email: string;
+//   age: number;
+// };
+// const func = <T>(n: T): T => {
+//   return n;
+// };
+// const obj: Person = {
+//   name: "kranti",
+//   email: "kranti@gmail.com",
+//   age: 20,
+// };
+// // const ans = func(obj);
+// const ans = func<Person>(obj);
+//another example.....
+// const func = <T, U>(n: T, o: U) => {
+//   return { n, o };
+// };
+// const ans = func<string, number>('hello',5);
+// console.log(ans)
+//another example.....
+// const func = <T, U extends T>(n: T, o: U) => {
+//   // U should be now string only
+//   return { n, o };
+// };
+// const ans = func<string, string>("hello", "5");
+// console.log(ans);
+//another example.....
+// type Person1 = {
+//   name: string;
+//   age: number;
+// };
+// type Person2 = {
+//   name: string;
+//   age: number;
+//   email: string;
+// };
+// const func = <T, U extends T>(n: T, o: U) => {
+//   return { n, o };
+// };
+// const ans = func<Person1, Person2>(
+//   { name: "person1", age: 45 },
+//   { name: "person1", age: 45, email: "person1@gmail.com" }
+// );
+// console.log(ans);
+//another example.....
+// type Person = {
+//   name: string;
+//   age: number;
+// };
+// const user: Person[] = [
+//   {
+//     name: "user1",
+//     age: 45,
+//   },
+//   {
+//     name: "user2",
+//     age: 57,
+//   },
+//   {
+//     name: "user3",
+//     age: 55,
+//   },
+//   {
+//     name: "user4",
+//     age: 15,
+//   },
+// ];
+// const filterUsers = <T, U extends keyof T>(
+//   array: T[],
+//   property: U,
+//   value: T[U]
+// ) => {
+//   return array.filter((eachUser) => eachUser[property] === value);
+// };
+// const filteredUserByName = filterUsers(user, 'name', "user2");
+// console.log(filteredUserByName);
